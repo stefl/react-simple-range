@@ -96,6 +96,9 @@ export default class Slider extends Component {
   }
   getSliderInfo() {
     const sl = this.refs.slider;
+    if(!sl) {
+      return null
+    }
     const sliderInfo = {
       bounds: sl.getBoundingClientRect(),
       length: sl.clientWidth,
@@ -133,12 +136,16 @@ export default class Slider extends Component {
     // compare position to slider length to get percentage
     let position;
     let lengthOrHeight;
+    const sliderInfo = this.getSliderInfo()
+    if(!sliderInfo) {
+      return null
+    }
     if (!vertical) {
-      position = xCoords - this.getSliderInfo().bounds.left;
-      lengthOrHeight = this.getSliderInfo().length;
+      position = xCoords - sliderInfo.bounds.left;
+      lengthOrHeight = sliderInfo.getSliderInfo().length;
     } else {
-      lengthOrHeight = this.getSliderInfo().height;
-      position = lengthOrHeight - (yCoords - this.getSliderInfo().bounds.top);
+      lengthOrHeight = sliderInfo.height;
+      position = lengthOrHeight - (yCoords - sliderInfo.bounds.top);
     }
     const percent = this.clampValue(+(position / lengthOrHeight).toFixed(2), 0, 1);
     // convert perc -> value then match value to notch as per props/state.step
